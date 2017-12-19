@@ -33,7 +33,7 @@ class Node
 
 		//------------------------------------------------------------------------//
 
-		Node *findParent( int data )
+		Node *findInsertionPoint( int data )
 		{
 			Node *parentNode = nullptr;
 			Node *currentNode = m_pRoot;
@@ -75,7 +75,7 @@ class Node
 			}
 
 			//search for parent node
-			Node *parentNode = findParent( data );
+			Node *parentNode = findInsertionPoint( data );
 
 			if ( !parentNode )
 			{
