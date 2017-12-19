@@ -1,7 +1,6 @@
 // ConsoleApplication_BinarySearchTree.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
 #include "btree.h"
 
 int main( int argc, char* args[] )
@@ -27,6 +26,42 @@ int main( int argc, char* args[] )
 
 		std::cout << "POST order listing\n";
 		tree.traversePostOrder( Node::m_pRoot );
+
+		//Search for specific node
+		Node *pNode = tree.findNode(100);
+		if (pNode)
+		{
+			std::cout << "Found node [" << *pNode << "]\n";
+		}
+		else
+		{
+			std::cout << "Not found\n";
+		}
+
+		pNode = nullptr;
+		pNode = tree.findNode(89);
+		if (pNode)
+		{
+			std::cout << "Found node [" << *pNode << "]\n";
+		}
+		else
+		{
+			std::cout << "Not found\n";
+		}
+
+		//Deletion & printout
+		double del = 43;
+		tree.deleteNode(43);
+		std::cout << "After deleting [" << del << "]\n";
+
+		std::cout << "In order listing\n";
+		tree.traverseInOrder(Node::m_pRoot);
+
+		std::cout << "PRE order listing\n";
+		tree.traversePreOrder(Node::m_pRoot);
+
+		std::cout << "POST order listing\n";
+		tree.traversePostOrder(Node::m_pRoot);
 	}
 
 	return 0;

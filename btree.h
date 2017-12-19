@@ -33,16 +33,19 @@ class Node
 
 		//------------------------------------------------------------------------//
 
-		Node *findInsertionPoint( int data )
+		Node *findNode( int data )
 		{
-			Node *parentNode = nullptr;
 			Node *currentNode = m_pRoot;
 
 			while ( currentNode )
 			{
-				parentNode = currentNode;
+				if ( data == currentNode->m_data )
+				//Found!
+				{
+					break;
+				}
 
-				//Advance current node (leave parent behind)
+				//Advance current node ( left or right )
 				if ( data < currentNode->m_data ) 
 				{
 					currentNode = currentNode->m_pLeft;
@@ -51,11 +54,43 @@ class Node
 				{
 					currentNode = currentNode->m_pRight;
 				}
+			};
+
+			return currentNode;
+		}
+
+		//------------------------------------------------------------------------//
+
+		Node *findParent( int data )
+		{
+			Node *parentNode = nullptr;
+			Node *childNode = m_pRoot;
+
+			while ( childNode )
+			{
+				parentNode = childNode;
+
+				//Advance current node (leave parent behind)
+				if ( data < childNode->m_data ) 
+				{
+					childNode = childNode->m_pLeft;
+				}
+				else if ( data > childNode->m_data )
+				{
+					childNode = childNode->m_pRight;
+				}
 				else
 				//Reject duplicate
 				{
-					currentNode = nullptr; 
+					//childNode = nullptr; 
 					parentNode = nullptr;
+					break;
+				}
+
+				//check child's data
+				if ( childNode && (data == childNode->m_data) )
+				{
+					break;
 				}
 			};
 
@@ -75,7 +110,7 @@ class Node
 			}
 
 			//search for parent node
-			Node *parentNode = findInsertionPoint( data );
+			Node *parentNode = findParent( data );
 
 			if ( !parentNode )
 			{
@@ -95,6 +130,55 @@ class Node
 
 			return;
 		} //insert()
+
+		//------------------------------------------------------------------------//
+
+		bool deleteNode( int data )
+		{
+			if ( m_pRoot == nullptr )
+			{
+				return false;
+			}
+
+			Node* pDelete = nullptr;
+
+			//search for parent node
+			Node *parent = findParent( data );
+
+			if ( !parent )
+			{
+				std::cout << "Not found: [" << data << "]\n";
+				return false;
+			}
+
+			//Deletion
+			if (data > parent->m_data) 
+			{
+				pDelete = parent->m_pRight;	
+			}
+			else if (data < parent->m_data) 
+			{
+				pDelete = parent->m_pLeft;	
+			}
+
+			if ( (pDelete->m_pLeft == nullptr) && (pDelete->m_pRight == nullptr) ) 
+			{
+				delete pDelete;
+
+				//avoid dangling pointer - set parent's child pointer to null
+				if (data > parent->m_data) 
+				{
+					parent->m_pRight = nullptr;	
+				}
+				else if (data < parent->m_data) 
+				{
+					parent->m_pLeft = nullptr;	
+				}
+			}
+
+			return true;
+		} //delete()
+
 
 		//-----------------------------------------------------------------------//
 
@@ -143,6 +227,21 @@ class Node
 			//Visit children
 			traversePreOrder( node->m_pLeft );
 			traversePreOrder( node->m_pRight );
+		}
+
+		//-----------------------------------------------------------------------//
+
+		double GetData() const
+		{
+			return m_data;
+		}
+
+		//-----------------------------------------------------------------------//
+
+		friend std::ostream& operator<<( std::ostream& os, const Node &node )
+		{
+			os << node.GetData();
+			return os;
 		}
 
 		//-----------------------------------------------------------------------//
