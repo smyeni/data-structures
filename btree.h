@@ -61,6 +61,27 @@ class Node
 
 		//------------------------------------------------------------------------//
 
+		Node *findMin( int data )
+		{
+			Node *currentNode = findNode(data);
+
+			while ( currentNode )
+			{
+				if ( !currentNode->m_pLeft )
+				{
+					break;
+					//return currentNode;
+				}
+
+				currentNode = currentNode->m_pLeft;
+				//currentNode = findMin( currentNode->m_pLeft->m_data );
+			};
+
+			return currentNode;
+		}
+
+		//------------------------------------------------------------------------//
+
 		Node *findParent( int data )
 		{
 			Node *parentNode = nullptr;
@@ -99,26 +120,26 @@ class Node
 
 		//------------------------------------------------------------------------//
 
-		void insert( int data )
+		bool insert( int data )
 		{
 			Node* pNode = new Node(data);
 
 			if ( m_pRoot == nullptr )
 			{
 				m_pRoot = pNode;
-				return;
+				return false;
 			}
 
 			//search for parent node
-			Node *parentNode = findParent( data );
-
-			if ( !parentNode )
+			Node *duplicate = findNode( data );
+			if ( duplicate )
 			{
 				std::cout << "Duplicate insert: [" << data << "]\n";
-				return;
+				return false;
 			}
 
 			//attach new node to identified parent node
+			Node *parentNode = findParent( data );
 			if (data > parentNode->m_data) 
 			{
 				parentNode->m_pRight = pNode;	
@@ -128,7 +149,7 @@ class Node
 				parentNode->m_pLeft = pNode;	
 			}
 
-			return;
+			return true;
 		} //insert()
 
 		//------------------------------------------------------------------------//
@@ -140,7 +161,7 @@ class Node
 				return false;
 			}
 
-			Node* pDelete = nullptr;
+			Node* toDelete = nullptr;
 
 			//search for parent node
 			Node *parent = findParent( data );
@@ -154,16 +175,17 @@ class Node
 			//Deletion
 			if (data > parent->m_data) 
 			{
-				pDelete = parent->m_pRight;	
+				toDelete = parent->m_pRight;	
 			}
 			else if (data < parent->m_data) 
 			{
-				pDelete = parent->m_pLeft;	
+				toDelete = parent->m_pLeft;	
 			}
 
-			if ( (pDelete->m_pLeft == nullptr) && (pDelete->m_pRight == nullptr) ) 
+			if ( (toDelete->m_pLeft == nullptr) && (toDelete->m_pRight == nullptr) ) 
+			//Deleting a Leaf node
 			{
-				delete pDelete;
+				delete toDelete;
 
 				//avoid dangling pointer - set parent's child pointer to null
 				if (data > parent->m_data) 
@@ -174,6 +196,24 @@ class Node
 				{
 					parent->m_pLeft = nullptr;	
 				}
+			}
+			else if ( (toDelete->m_pLeft == nullptr) && toDelete->m_pRight ) 
+			{
+				parent->m_pRight = toDelete->m_pRight;	
+				delete toDelete;
+			}
+			else if ( (toDelete->m_pRight == nullptr) && toDelete->m_pLeft ) 
+			{
+				parent->m_pLeft = toDelete->m_pLeft;	
+				delete toDelete;
+			}
+			else
+			{
+				//find min child, copy its value into outgoing node, delete child
+				Node *pMin = findMin( toDelete->m_pRight->m_data );
+				int temp = pMin->m_data; //save this for after deletion
+				deleteNode( pMin->m_data );
+				toDelete->m_data = temp; //do this last to avoid duplicates in tree
 			}
 
 			return true;
