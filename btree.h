@@ -20,14 +20,14 @@ class Node
 		{
 			if (m_pLeft)
 			{
-				delete m_pLeft;
-				//m_pLeft = nullptr;
+				//delete m_pLeft;
+				m_pLeft = nullptr;
 			}
 
 			if (m_pRight)
 			{
-				delete m_pRight;
-				//m_pRight = nullptr;
+				//delete m_pRight;
+				m_pRight = nullptr;
 			}
 		}
 
@@ -209,10 +209,10 @@ class Node
 			}
 			else
 			{
-				//find min child, copy its value into outgoing node, delete child
+				//Find min (right side) child, copy its value into outgoing node, delete child
 				Node *pMin = findMin( toDelete->m_pRight->m_data );
 				int temp = pMin->m_data; //save this for after deletion
-				deleteNode( pMin->m_data );
+				bool isOK = deleteNode( pMin->m_data );
 				toDelete->m_data = temp; //do this last to avoid duplicates in tree
 			}
 

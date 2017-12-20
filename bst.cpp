@@ -5,6 +5,7 @@
 
 int main( int argc, char* args[] )
 {
+
 	{
 		Node tree(100);
 		tree.insert(100);
@@ -59,16 +60,10 @@ int main( int argc, char* args[] )
 		}
 
 		//Deletion & printout
-		double del = 43;
+		double del = 140;
 		//tree.deleteNode(43);
-		tree.deleteNode(140);
+		tree.deleteNode(del);
 		std::cout << "After deleting [" << del << "]\n";
-
-		//std::cout << "In order listing\n";
-		//tree.traverseInOrder(Node::m_pRoot);
-
-		//std::cout << "PRE order listing\n";
-		//tree.traversePreOrder(Node::m_pRoot);
 
 		std::cout << "POST order listing\n";
 		tree.traversePostOrder(Node::m_pRoot);
@@ -80,6 +75,13 @@ int main( int argc, char* args[] )
 		min = tree.findMin(100);
 		min = tree.findMin(89);
 		min = tree.findMin(35);
+
+		del = 30;
+		tree.deleteNode(del);
+		std::cout << "After deleting [" << del << "]\n";
+
+		std::cout << "POST order listing\n";
+		tree.traversePostOrder(Node::m_pRoot);
 	}
 
 	return 0;
